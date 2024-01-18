@@ -30,8 +30,12 @@ function delitedCard(element) {
     })
 }
 
-
 // @todo: Функция создания карточки
+function createCards(card) {
+    placesList.append(card);
+    delitedCard(placesList);
+}
+
 // @todo: Вывести карточки на страницу
 
 cards.forEach((card) => {
@@ -41,7 +45,6 @@ cards.forEach((card) => {
     cardElement.querySelector('.card__image').alt = card.name;
     cardElement.querySelector('.card__title').textContent = card.name;
     
-    placesList.append(cardElement);
+    createCards(cardElement)
 })
 
-delitedCard(placesList);
