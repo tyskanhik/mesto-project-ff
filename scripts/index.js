@@ -1,50 +1,47 @@
-// копируем входящий массив с карточками
-
-let cards = initialCards.slice();
-
-
 // @todo: Темплейт карточки
 
 const cardTemplate = document.querySelector('#card-template').content;
 
 
 // @todo: DOM узлы
-const placesList = document.querySelector('.places__list');
-
-
-// модальные окна
-
-const popupTypeEdit = document.querySelector('.popup_type_edit');
-const popupTypeNewCard = document.querySelector('.popup_type_new-card');
-const popupTypeImage = document.querySelector('.popup_type_image');
+const cardsContainer = document.querySelector('.places__list');
 
 
 // @todo: Функция удаления карточки
 
-function delitedCard(element) {
-    const deleteButton = element.querySelectorAll('.card__delete-button');
-    deleteButton.forEach((button) => {
-        button.addEventListener('click', () => {
-            button.parentElement.remove();
-        })
-    })
+function delitedCard(button) {
+    button.closest('.places__item').remove();
 }
 
+
 // @todo: Функция создания карточки
-function createCards(card) {
-    placesList.append(card);
-    delitedCard(placesList);
+
+function createCard(elem) {
+    const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
+    const cardElementLink = cardElement.querySelector('.card__image');
+    const cardElementTitle = cardElement.querySelector('.card__title')
+    const cardDeleteButton = cardElement.querySelector('.card__delete-button');
+
+    cardDeleteButton.addEventListener('click', () => {
+        delitedCard(cardDeleteButton);
+    })
+
+    cardElementLink.src = elem.link;
+    cardElementLink.alt = elem.name;
+    cardElementTitle.textContent = elem.name;
+    
+    const card = cardElement;
+    return card;
 }
+
 
 // @todo: Вывести карточки на страницу
 
-cards.forEach((card) => {
-    const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
+function showCards(elem) {
+    const card = createCard(elem);
+    cardsContainer.prepend(card);
+}
 
-    cardElement.querySelector('.card__image').src = card.link;
-    cardElement.querySelector('.card__image').alt = card.name;
-    cardElement.querySelector('.card__title').textContent = card.name;
-    
-    createCards(cardElement)
+initialCards.forEach((elem) => {
+    showCards(elem);
 })
-
