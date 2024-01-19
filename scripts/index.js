@@ -9,7 +9,7 @@ const cardsContainer = document.querySelector('.places__list');
 
 // @todo: Функция удаления карточки
 
-function delitedCard(button) {
+function handleDelitedCardButton(button) {
     button.closest('.places__item').remove();
 }
 
@@ -23,7 +23,7 @@ function createCard(elem) {
     const cardDeleteButton = cardElement.querySelector('.card__delete-button');
 
     cardDeleteButton.addEventListener('click', () => {
-        delitedCard(cardDeleteButton);
+        handleDelitedCardButton(cardDeleteButton);
     })
 
     cardElementLink.src = elem.link;
