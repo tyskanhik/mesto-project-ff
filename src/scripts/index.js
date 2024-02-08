@@ -1,3 +1,7 @@
+import { initialCards } from './cards.js'
+import { openPopupImage } from './popup.js'
+
+
 // @todo: Темплейт карточки
 
 const cardTemplate = document.querySelector('#card-template').content;
@@ -16,7 +20,7 @@ function handleCardDelete(card) {
 
 // @todo: Функция создания карточки
 
-function createCard(cardData) {
+function createCard(cardData, handleCardDelete) {
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
     const cardElementLink = cardElement.querySelector('.card__image');
     const cardElementTitle = cardElement.querySelector('.card__title')
@@ -24,6 +28,10 @@ function createCard(cardData) {
 
     cardDeleteButton.addEventListener('click', () => {
         handleCardDelete(cardElement);
+    })
+
+    cardElementLink.addEventListener('click', () => {
+        openPopupImage(cardData)
     })
 
     cardElementLink.src = cardData.link;
@@ -37,7 +45,7 @@ function createCard(cardData) {
 // @todo: Вывести карточки на страницу
 
 function showCard(elem) {
-    const card = createCard(elem);
+    const card = createCard(elem, handleCardDelete);
     cardsContainer.prepend(card);
 }
 
