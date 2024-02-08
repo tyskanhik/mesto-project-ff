@@ -15,17 +15,22 @@ export const openPopupImage = (card) => {
     openPopup(popupImage)
 }
 
-function escPopupClose() {
-    document.addEventListener('keydown', (evt) => {
-        const key = (evt.keyCode == 27)?true:false;
-        return key;
-    })
-}
-
 function openPopup(namePopup) {
     namePopup.classList.add('popup_is-animated');
     namePopup.classList.add('popup_is-opened');
+
+    document.addEventListener('keydown', (evt) => {
+        escPopupClose(evt.keyCode, namePopup)
+    }, { once: true })
+
     closePopup(namePopup);
+}
+
+function escPopupClose(keyCode, popup) {
+    const ESCAPE = 27;
+    if (keyCode == ESCAPE) {
+        popup.classList.remove('popup_is-opened');
+    }
 }
 
 const closePopup = (namePopup) => {
