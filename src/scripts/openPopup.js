@@ -1,7 +1,9 @@
-import { escPopupClose, closePopup } from './closePopup.js'
+import { escPopupClose, closePopupCurrentTarget, closePopupHandleButton } from './closePopup.js'
 
 
 export function openPopup(namePopup) {
+    const butonPopupClose = namePopup.querySelector('.popup__close');
+
     namePopup.classList.add('popup_is-animated');
     namePopup.classList.add('popup_is-opened');
 
@@ -9,5 +11,14 @@ export function openPopup(namePopup) {
         escPopupClose(evt.keyCode, namePopup)
     }, { once: true })
 
-    closePopup(namePopup);
+
+    function eventCurrentTarget(evt) {
+        closePopupCurrentTarget(evt, namePopup, eventCurrentTarget)
+    }
+
+    namePopup.addEventListener('click', eventCurrentTarget)
+
+    butonPopupClose.addEventListener('click', () => {
+        closePopupHandleButton(namePopup)
+    }, { once: true })
 }
