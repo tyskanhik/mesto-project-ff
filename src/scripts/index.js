@@ -1,5 +1,5 @@
 import { initialCards } from './cards.js'
-import { openPopupImage } from './popup.js'
+import { openPopupImage } from './imagePopup.js'
 
 
 // @todo: Темплейт карточки
