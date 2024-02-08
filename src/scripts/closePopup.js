@@ -17,3 +17,7 @@ export const closePopupCurrentTarget = (evt, popup, name) => {
         popup.removeEventListener('click', name)
     }
 }
+
+export const closeSubmitPopup = (popup) => {
+    popup.classList.remove('popup_is-opened');
+}
