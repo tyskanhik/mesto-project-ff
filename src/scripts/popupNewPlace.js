@@ -14,7 +14,7 @@ const urlRegExp = /^https?\:\/\//;
 
 
 buttonNewPlace.addEventListener('click', () => {
-    openPopup(popupNewPlace)
+    openPopup(popupNewPlace, form)
 })
 
 function handleFormSubmit(evt) {

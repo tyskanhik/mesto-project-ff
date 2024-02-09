@@ -1,5 +1,6 @@
 import { initialCards } from './cards.js'
 import { openPopupImage } from './imagePopup.js'
+import { isLiked } from './isLiked.js'
 
 
 // @todo: Темплейт карточки
@@ -20,11 +21,12 @@ function handleCardDelete(card) {
 
 // @todo: Функция создания карточки
 
-function createCard(cardData, handleCardDelete) {
+function createCard(cardData, handleCardDelete, isLiked) {
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
     const cardElementLink = cardElement.querySelector('.card__image');
     const cardElementTitle = cardElement.querySelector('.card__title')
     const cardDeleteButton = cardElement.querySelector('.card__delete-button');
+    const cardLikeBbutton = cardElement.querySelector('.card__like-button');
 
     cardDeleteButton.addEventListener('click', () => {
         handleCardDelete(cardElement);
@@ -32,6 +34,10 @@ function createCard(cardData, handleCardDelete) {
 
     cardElementLink.addEventListener('click', () => {
         openPopupImage(cardData)
+    })
+
+    cardLikeBbutton.addEventListener('click', () => {
+        isLiked(cardLikeBbutton)
     })
 
     cardElementLink.src = cardData.link;
@@ -45,7 +51,7 @@ function createCard(cardData, handleCardDelete) {
 // @todo: Вывести карточки на страницу
 
 export function showCard(elem) {
-    const card = createCard(elem, handleCardDelete);
+    const card = createCard(elem, handleCardDelete, isLiked);
     cardsContainer.prepend(card);
 }
 
