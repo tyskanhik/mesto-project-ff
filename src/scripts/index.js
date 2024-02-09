@@ -44,7 +44,7 @@ function createCard(cardData, handleCardDelete) {
 
 // @todo: Вывести карточки на страницу
 
-function showCard(elem) {
+export function showCard(elem) {
     const card = createCard(elem, handleCardDelete);
     cardsContainer.prepend(card);
 }
