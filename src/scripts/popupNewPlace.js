@@ -18,7 +18,7 @@ buttonNewPlace.addEventListener('click', () => {
 })
 
 function handleFormSubmit(evt) {
-    evt.preventDefault(); 
+    evt.preventDefault();
 
     const card = {};
     card.name = newPlace.value;
@@ -27,8 +27,8 @@ function handleFormSubmit(evt) {
     showCard(card);
 
     form.reset();
-
-    closeSubmitPopup(popupNewPlace); 
+    closeSubmitPopup(popupNewPlace);
+    setSubmitButtonState(false, buttonSubmit)
 }
 
 form.addEventListener('submit', handleFormSubmit);

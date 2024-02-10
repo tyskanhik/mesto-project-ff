@@ -1,7 +1,7 @@
 export function setSubmitButtonState(isValid, addButton) {
-    if(!isValid) {
+    if (!isValid) {
         addButton.setAttribute('disabled', true);
     } else {
-    addButton.removeAttribute('disabled');
+        addButton.removeAttribute('disabled');
     }
 }

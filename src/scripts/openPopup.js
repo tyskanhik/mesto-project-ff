@@ -7,11 +7,11 @@ export function openPopup(namePopup, form) {
     namePopup.classList.add('popup_is-animated');
     namePopup.classList.add('popup_is-opened');
 
-    
+
     function eventEscTarget(evt) {
         escPopupClose(evt.keyCode, namePopup, eventEscTarget, form)
     }
-    
+
     document.addEventListener('keydown', eventEscTarget)
 
     function eventCurrentTarget(evt) {

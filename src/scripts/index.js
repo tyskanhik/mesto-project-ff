@@ -1,5 +1,5 @@
 import { initialCards } from './cards.js'
-import { openPopupImage } from './imagePopup.js'
+import { openPopupImage } from './popupImage.js'
 import { isLiked } from './isLiked.js'
 
 
@@ -43,7 +43,7 @@ function createCard(cardData, handleCardDelete, isLiked) {
     cardElementLink.src = cardData.link;
     cardElementLink.alt = cardData.name;
     cardElementTitle.textContent = cardData.name;
-    
+
     return cardElement;
 }
 

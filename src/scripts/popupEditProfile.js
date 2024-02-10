@@ -19,11 +19,11 @@ buttonEditProfile.addEventListener('click', () => {
 })
 
 function handleFormSubmit(evt) {
-    evt.preventDefault(); 
+    evt.preventDefault();
     profileTitle.textContent = name.value;
     profileDescription.textContent = description.value;
 
-    closeSubmitPopup(popupEditProfile); 
+    closeSubmitPopup(popupEditProfile);
 }
 
 form.addEventListener('submit', handleFormSubmit);
