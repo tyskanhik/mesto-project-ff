@@ -1,6 +1,9 @@
 import { initialCards } from './cards.js'
 import { openPopupImage } from './popupImage.js'
 import { isLiked } from './isLiked.js'
+import '../pages/index.css'
+import './popupEditProfile.js'
+import './popupNewPlace.js'
 
 
 // @todo: Темплейт карточки

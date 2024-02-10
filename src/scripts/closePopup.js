@@ -3,13 +3,19 @@ export const escPopupClose = (keyCode, popup, eventEscTarget, form) => {
     if (keyCode == ESCAPE) {
         popup.classList.remove('popup_is-opened');
         document.removeEventListener('keydown', eventEscTarget)
-        form.reset();
+        if (!!form) {
+            form.reset();
+        }
     }
 }
 
 export const closePopupHandleButton = (popup, form) => {
     popup.classList.remove('popup_is-opened')
-    form.reset();
+    if (!!form) {
+        if (!!form) {
+            form.reset();
+        }
+    }
 }
 
 
@@ -17,7 +23,9 @@ export const closePopupCurrentTarget = (evt, popup, name, form) => {
     if (evt.currentTarget == evt.target) {
         evt.currentTarget.classList.remove('popup_is-opened')
         popup.removeEventListener('click', name)
-        form.reset();
+        if (!!form) {
+            form.reset();
+        }
     }
 }
 
