@@ -1,63 +1,81 @@
-import { initialCards } from './cards.js'
-import { openPopupImage } from './popupImage.js'
-import { isLiked } from './isLiked.js'
 import '../pages/index.css'
-import './popupEditProfile.js'
-import './popupNewPlace.js'
+import { initialCards } from './cards.js'
+import { createCard, handleCardDelete, isLiked } from './card.js'
+import { openPopup, closePopup } from './modal.js'
 
-
-// @todo: Темплейт карточки
-
-const cardTemplate = document.querySelector('#card-template').content;
 
 
 // @todo: DOM узлы
+export const popupImage = document.querySelector('.popup_type_image');
 const cardsContainer = document.querySelector('.places__list');
 
+const popupNewPlace = document.querySelector('.popup_type_new-card');
+const buttonNewPlace = document.querySelector('.profile__add-button');
+const formNewPlase = document.forms['new-place'];
 
-// @todo: Функция удаления карточки
-
-function handleCardDelete(card) {
-    card.remove();
-}
-
-
-// @todo: Функция создания карточки
-
-function createCard(cardData, handleCardDelete, isLiked) {
-    const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
-    const cardElementLink = cardElement.querySelector('.card__image');
-    const cardElementTitle = cardElement.querySelector('.card__title')
-    const cardDeleteButton = cardElement.querySelector('.card__delete-button');
-    const cardLikeBbutton = cardElement.querySelector('.card__like-button');
-
-    cardDeleteButton.addEventListener('click', () => {
-        handleCardDelete(cardElement);
-    })
-
-    cardElementLink.addEventListener('click', () => {
-        openPopupImage(cardData)
-    })
-
-    cardLikeBbutton.addEventListener('click', () => {
-        isLiked(cardLikeBbutton)
-    })
-
-    cardElementLink.src = cardData.link;
-    cardElementLink.alt = cardData.name;
-    cardElementTitle.textContent = cardData.name;
-
-    return cardElement;
-}
+const popupEditProfile = document.querySelector('.popup_type_edit');
+const buttonEditProfile = document.querySelector('.profile__edit-button');
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
+const formEditProfile = document.forms['edit-profile']
+const name = formEditProfile.elements.name;
+const description = formEditProfile.elements.description;
 
 
-// @todo: Вывести карточки на страницу
-
-export function showCard(elem) {
-    const card = createCard(elem, handleCardDelete, isLiked);
-    cardsContainer.prepend(card);
+function showCard(elem, boolean) {
+    const card = createCard(elem, handleCardDelete, isLiked, openPopupImage);
+    boolean ? cardsContainer.append(card) : cardsContainer.prepend(card);
 }
 
 initialCards.forEach((elem) => {
-    showCard(elem);
+    showCard(elem, true);
 })
+
+function openPopupImage(card) {
+    popupImage.querySelector('.popup__image').
+        src = card.link;
+    popupImage.querySelector('.popup__caption').
+        textContent = card.name;
+
+    openPopup(popupImage)
+}
+
+buttonNewPlace.addEventListener('click', () => {
+    openPopup(popupNewPlace)
+})
+
+function handleSubmitNewPlase(evt) {
+    evt.preventDefault();
+
+    const newPlace = formNewPlase.elements['place-name'];
+    const link = formNewPlase.elements.link;
+
+    const card = {};
+    card.name = newPlace.value;
+    card.link = link.value;
+
+    showCard(card, false);
+
+    formNewPlase.reset();
+    closePopup(popupNewPlace);
+}
+
+formNewPlase.addEventListener('submit', handleSubmitNewPlase);
+
+buttonEditProfile.addEventListener('click', () => {
+    name.value = profileTitle.textContent;
+    description.value = profileDescription.textContent;
+
+    openPopup(popupEditProfile);
+})
+
+function handleSubmitEditProfile(evt) {
+    evt.preventDefault();
+
+    profileTitle.textContent = name.value;
+    profileDescription.textContent = description.value;
+
+    closePopup(popupEditProfile);
+}
+
+formEditProfile.addEventListener('submit', handleSubmitEditProfile);
