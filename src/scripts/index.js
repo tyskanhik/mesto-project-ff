@@ -1,7 +1,7 @@
 import '../pages/index.css'
 import { initialCards } from './cards.js'
 import { createCard, handleCardDelete, isLiked } from './card.js'
-import { openPopup, closePopup } from './modal.js'
+import { openPopup, closePopup, setCloseModalWindowEventListeners } from './modal.js'
 
 
 
@@ -23,7 +23,7 @@ const description = formEditProfile.elements.description;
 
 
 function showCard(elem, boolean) {
-    const card = createCard(elem, handleCardDelete, isLiked, openPopupImage);
+    const card = createCard(elem, { handleCardDelete, isLiked, openPopupImage });
     boolean ? cardsContainer.append(card) : cardsContainer.prepend(card);
 }
 
@@ -38,10 +38,12 @@ function openPopupImage(card) {
         textContent = card.name;
 
     openPopup(popupImage)
+    setCloseModalWindowEventListeners(popupImage)
 }
 
 buttonNewPlace.addEventListener('click', () => {
     openPopup(popupNewPlace)
+    setCloseModalWindowEventListeners(popupNewPlace)
 })
 
 function handleSubmitNewPlase(evt) {
@@ -57,6 +59,7 @@ function handleSubmitNewPlase(evt) {
     showCard(card, false);
 
     formNewPlase.reset();
+
     closePopup(popupNewPlace);
 }
 
@@ -67,6 +70,7 @@ buttonEditProfile.addEventListener('click', () => {
     description.value = profileDescription.textContent;
 
     openPopup(popupEditProfile);
+    setCloseModalWindowEventListeners(popupEditProfile)
 })
 
 function handleSubmitEditProfile(evt) {

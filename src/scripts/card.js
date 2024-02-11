@@ -1,27 +1,19 @@
-export function createCard(...arg) {
+export function createCard(elem, { handleCardDelete, isLiked, openPopupImage }) {
     const cardElement = getTemplate()
     const cardElementLink = cardElement.querySelector('.card__image');
     const cardElementTitle = cardElement.querySelector('.card__title')
     const cardDeleteButton = cardElement.querySelector('.card__delete-button');
     const cardLikeButton = cardElement.querySelector('.card__like-button');
 
-    cardDeleteButton.addEventListener('click', (evt) => {
-        if (!!evt) {
-            arg[1](cardElement)
-        }
-    })
+    cardDeleteButton.addEventListener('click', handleCardDelete)
 
-    cardElementLink.addEventListener('click', () => {
-        arg[3](arg[0])
-    })
+    cardElementLink.addEventListener('click', () => openPopupImage(elem))
 
-    cardLikeButton.addEventListener('click', () => {
-        arg[2](cardLikeButton)
-    })
+    cardLikeButton.addEventListener('click', isLiked)
 
-    cardElementLink.src = arg[0].link;
-    cardElementLink.alt = arg[0].name;
-    cardElementTitle.textContent = arg[0].name;
+    cardElementLink.src = elem.link;
+    cardElementLink.alt = elem.name;
+    cardElementTitle.textContent = elem.name;
 
     return cardElement;
 }
@@ -33,10 +25,10 @@ const getTemplate = () => {
         .cloneNode(true);
 };
 
-export function isLiked(elem) {
-    elem.classList.toggle('card__like-button_is-active')
+export function isLiked(evt) {
+    evt.target.classList.toggle('card__like-button_is-active')
 }
 
-export function handleCardDelete(card) {
-    card.remove();
+export function handleCardDelete(evt) {
+    evt.target.closest('.card').remove();
 }
