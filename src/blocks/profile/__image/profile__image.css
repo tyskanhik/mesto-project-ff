@@ -1,4 +1,9 @@
+:root {
+  --visibility: hidden;
+}
+
 .profile__image {
+  position: relative;
   width: 120px;
   height: 120px;
   -webkit-border-radius: 50%;
@@ -19,4 +24,9 @@
   .profile__image {
     margin-right: 0;
   }
+}
+
+.profile__image:hover {
+  --visibility: visible;
+  cursor: pointer;
 }

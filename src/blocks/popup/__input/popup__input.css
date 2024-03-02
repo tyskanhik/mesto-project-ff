@@ -6,17 +6,34 @@
   font-size: 14px;
   line-height: 18px;
   box-sizing: border-box;
-  padding: 10px 0 0;
-  margin-bottom: 10px;
 }
 
 .popup__input:last-of-type {
   margin-bottom: 0;
 }
 
+.input-error{
+  display: block;
+  min-height: 1.8rem;
+}
+
+.popup__input_type_error:focus-visible {
+  outline: none;
+}
+
+.popup__input-error_active {
+  font-size: 12px;
+  line-height: 14.52px;
+  color: red;
+}
+
 @media screen and (max-width: 568px) {
   .popup__title {
     font-size: 12px;
     line-height: 15px;
+  }
+
+  .input-error{
+    min-height: 2.8rem;
   }
 }
