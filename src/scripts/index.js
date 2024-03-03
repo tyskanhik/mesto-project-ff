@@ -1,6 +1,6 @@
 import '../pages/index.css'
 import { myObjKey, setNewCard, setEditProfile, setEditAvatar, loadPage, setDeliteCard } from './api.js'
-import { createCard, isLiked } from './card.js'
+import { createCard, isLiked, handleCardDelete } from './card.js'
 import { openPopup, closePopup, setCloseModalWindowEventListeners } from './modal.js'
 import { clearValidation, enableValidation } from './validation.js'
 
@@ -10,6 +10,8 @@ import { clearValidation, enableValidation } from './validation.js'
  */
 const DOM = {
     popupImage: document.querySelector('.popup_type_image'),
+    popupImageCaption: document.querySelector('.popup__caption'),
+    popupImageLink: document.querySelector('.popup__image'),
     cardsContainer: document.querySelector('.places__list'),
     popupNewPlace: document.querySelector('.popup_type_new-card'),
     buttonNewPlace: document.querySelector('.profile__add-button'),
@@ -23,6 +25,7 @@ const DOM = {
     imageAvatar: document.querySelector('.profile__image'),
     formEditAvatar: document.forms['edit-profile-avatar'],
     popupDeletionConfirmation: document.querySelector('.popup_type_delite'),
+    formDeliteCard: document.forms['delit-card']
 }
 
 /**
@@ -38,16 +41,21 @@ const configValidation = {
     inputError: '.input-error'
 }
 
+const cacheLastHandleDelitCard = {
+    id: '',
+    card: {}
+}
+
 /**
  * 
  * @param { object } elem Объект карточки
  * @param { Text } myId Мой id
- * @param { boolean } boolean флаг переключения методов вставки карточек на страницу
+ * @param { boolean } isAppend флаг переключения методов вставки карточек на страницу
  * @description Отображение карточек на страницу при флаге true вставляет карточку вконец при флаге false в начало
  */
-function showCard(elem, myId, boolean) {
+function showCard(elem, myId, isAppend) {
     const card = createCard(elem, myId, { isLiked, openPopupImage, deletionConfirmation });
-    boolean ? DOM.cardsContainer.append(card) : DOM.cardsContainer.prepend(card);
+    isAppend ? DOM.cardsContainer.append(card) : DOM.cardsContainer.prepend(card);
 }
 
 /**
@@ -81,9 +89,9 @@ function handleSubmitEditProfile(evt) {
         .then((res) => {
             loadProfile(res)
             closePopup(DOM.popupEditProfile)
-            button.textContent = 'Сохранить'
         })
         .catch((err) => console.log(err))
+        .finally(() => button.textContent = 'Сохранить')
 }
 DOM.buttonEditProfile.addEventListener('click', () => {
     const nameEditProfile = DOM.formEditProfile.elements.name;
@@ -97,32 +105,6 @@ DOM.buttonEditProfile.addEventListener('click', () => {
     setCloseModalWindowEventListeners(DOM.popupEditProfile)
 })
 DOM.formEditProfile.addEventListener('submit', handleSubmitEditProfile);
-
-/**
- * 
- * @param { object } elem Объект карточки 
- * @param { EventListener } evt Событие клик по кнопке удалить карточку
- * @description Подтверждение удаления карточки
- */
-const deletionConfirmation = (elem, evt) => {
-    const delite = DOM.popupDeletionConfirmation.querySelector('.popup__button')
-
-    openPopup(DOM.popupDeletionConfirmation)
-    setCloseModalWindowEventListeners(DOM.popupDeletionConfirmation)
-    delite.addEventListener('click', () => {
-        delite.textContent = 'Удаление...'
-
-        setDeliteCard(elem._id)
-            .then((res) => {
-                closePopup(DOM.popupDeletionConfirmation)
-                evt.target.closest('.card').remove();
-                delite.textContent = 'Да'
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    })
-}
 
 /**
  * 
@@ -142,18 +124,17 @@ function handleSubmitNewPlase(evt) {
 
     setNewCard(card)
         .then(card => {
-            showCard(card, myObjKey.myId, false)
+            showCard(card, myObjKey.myId, false);
             closePopup(DOM.popupNewPlace);
-            button.textContent = 'Сохранить'
             DOM.formNewPlase.reset();
         })
         .catch((err) => console.log(err))
+        .finally(() => button.textContent = 'Создать')
 }
 DOM.buttonNewPlace.addEventListener('click', () => {
     DOM.formNewPlase.reset();
     clearValidation(DOM.formNewPlase, configValidation)
     openPopup(DOM.popupNewPlace)
-    setCloseModalWindowEventListeners(DOM.popupNewPlace)
 })
 DOM.formNewPlase.addEventListener('submit', handleSubmitNewPlase);
 
@@ -172,16 +153,15 @@ function handleSubmitEditAvatar(evt) {
     setEditAvatar(link.value)
         .then(res => {
             loadProfile(res)
-            button.textContent = 'Сохранить'
             closePopup(DOM.popupEditAvatar);
         })
         .catch((err) => console.log(err))
+        .finally(() => button.textContent = 'Сохранить')
 }
 DOM.imageAvatar.addEventListener('click', () => {
     DOM.formEditAvatar.reset()
     clearValidation(DOM.formEditAvatar, configValidation)
     openPopup(DOM.popupEditAvatar)
-    setCloseModalWindowEventListeners(DOM.popupEditAvatar)
 })
 DOM.formEditAvatar.addEventListener('submit', handleSubmitEditAvatar)
 
@@ -191,21 +171,41 @@ DOM.formEditAvatar.addEventListener('submit', handleSubmitEditAvatar)
  * @description Обработка открытия попапа с картинкой
  */
 function openPopupImage(card) {
-    DOM.popupImage.querySelector('.popup__image').
-        src = card.link;
-    DOM.popupImage.querySelector('.popup__caption').
-        textContent = card.name;
+    DOM.popupImageLink.src = card.link;
+    DOM.popupImageCaption.textContent = card.name;
+    DOM.popupImageCaption.alt = card.name;
 
     openPopup(DOM.popupImage)
-    setCloseModalWindowEventListeners(DOM.popupImage)
 }
 
+/**
+ * 
+ * @param { object } elem Объект карточки
+ * @param { EventListener } evt Событие клик по иконке удалить карточку
+ * @description Открывает модальное окно с подтверждением и заносит данные в caches
+ */
+const deletionConfirmation = (elem, evt) => {
+    openPopup(DOM.popupDeletionConfirmation)
+    caches.id = elem._id
+    caches.card = evt.target.closest('.card')
+}
+DOM.formDeliteCard.addEventListener('submit', (evt) => {
+    evt.preventDefault()
+    const button = DOM.formDeliteCard.querySelector('.popup__button')
+    handleCardDelete(caches, button, DOM.popupDeletionConfirmation)
+})
+
 enableValidation(configValidation)
+
+document.querySelectorAll('.popup').forEach(popup => {
+    setCloseModalWindowEventListeners(popup);
+    popup.classList.add('popup_is-animated');
+});
 
 loadPage()
     .then(res => {
         const [card, profile] = res;
-        card.map(card => showCard(card, profile._id, true))
+        card.forEach(card => showCard(card, profile._id, true))
         loadProfile(profile)
     })
     .catch((err) => console.log(err))

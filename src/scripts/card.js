@@ -1,6 +1,7 @@
 /** @module card */
 
-import { setLikes } from './api'
+import { setLikes, setDeliteCard } from './api'
+import { closePopup } from './modal';
 
 /**
  * 
@@ -16,15 +17,14 @@ export function createCard(elem, myId, { isLiked, openPopupImage, deletionConfir
     const cardElementTitle = cardElement.querySelector('.card__title')
     const cardLikeButton = cardElement.querySelector('.card__like-button');
     const cardLikeCounter = cardElement.querySelector('.card__like-number')
-
-    if (elem.owner._id == myId) {
-        const cardDeleteButton = createDeliteBtnCard()
-        cardElement.prepend(cardDeleteButton)
-        cardDeleteButton.addEventListener('click', (evt) => deletionConfirmation(elem, evt))
+    const cardDeleteButton = cardElement.querySelector('.card__delete-button')
+    if (elem.owner._id !== myId) {
+        cardDeleteButton.remove()
     }
 
+    cardDeleteButton.addEventListener('click', (evt) => deletionConfirmation(elem, evt))
     cardLikeCounter.textContent = elem.likes.length
-    elem.likes.map(likes => myLiked(likes._id, cardLikeButton, myId))
+    elem.likes.forEach(likes => myLiked(likes._id, cardLikeButton, myId))
 
     cardElementLink.addEventListener('click', () => openPopupImage(elem))
 
@@ -57,7 +57,7 @@ const getTemplate = () => {
  * @param { Text } myId Мой id
  */
 const myLiked = (likeId, cardLikeButton, myId) => {
-    if (likeId == myId) {
+    if (likeId === myId) {
         cardLikeButton.classList.add('card__like-button_is-active')
     }
 }
@@ -69,8 +69,6 @@ const myLiked = (likeId, cardLikeButton, myId) => {
  * @description Обработка постановки и снятия лайков
  */
 export function isLiked(evt, elem) {
-    console.log(elem);
-    evt.target.classList.toggle('card__like-button_is-active');
     let method = ''
     if (evt.target.classList.contains('card__like-button_is-active')) {
         method = 'PUT'
@@ -82,19 +80,26 @@ export function isLiked(evt, elem) {
         .then((result) => {
             evt.target.closest('.places__item').querySelector('.card__like-number')
                 .textContent = result.likes.length
+            evt.target.classList.toggle('card__like-button_is-active');
         })
         .catch((err) => console.log(err))
 }
 
-
 /**
  * 
- * @returns { HTMLButtonElement } Кнопка удаления карточки
+ * @param { object } cachesCard Последня карточка на которой была нажата кнопка удалить
+ * @param { HTMLButtonElement } buttonDelite Кнопка подтверждения удаления
+ * @param { HTMLElement } popup Модальное окно с подтверждением удаления карточки
  */
-const createDeliteBtnCard = () => {
-    const button = document.createElement('button');
-    button.setAttribute('type', 'button');
-    button.classList.add('card__delete-button');
-
-    return button
+export function handleCardDelete(cachesCard, buttonDelite, popup) {
+    buttonDelite.textContent = 'Удаление...'
+    setDeliteCard(cachesCard.id)
+        .then((res) => {
+            closePopup(popup)
+            cachesCard.card.remove()
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+        .finally(() => buttonDelite.textContent = 'Да')
 }

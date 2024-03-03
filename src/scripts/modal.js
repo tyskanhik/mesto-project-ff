@@ -6,7 +6,6 @@
  * @description Открытие модального окна
  */
 export function openPopup(namePopup) {
-    namePopup.classList.add('popup_is-animated');
     namePopup.classList.add('popup_is-opened');
     document.addEventListener("keyup", handleEscUp);
 }

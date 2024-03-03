@@ -22,6 +22,18 @@ export const config = {
 
 /**
  * 
+ * @param { object } res Ответ со статусом сервера
+ * @returns { object } Ответ с телом запроса
+ */
+const getResponseData = async (res) => {
+    if (!res.ok) {
+        return Promise.reject(`Ошибка: ${res.status}`);
+    }
+    return await res.json();
+}
+
+/**
+ * 
  * @returns { Promise<Response> }
  * @description запрос на получение карточек
  */
@@ -29,10 +41,7 @@ export const getCards = async () => {
     const res = await fetch(`${config.baseUrl}/cards`, {
         headers: config.headers
     })
-    if (!res.ok) {
-        throw new Error('Error occurred!')
-    }
-    return await res.json()
+    return getResponseData(res)
 }
 
 /**
@@ -44,10 +53,7 @@ export const getProfile = async () => {
     const res = await fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers
     })
-    if (!res.ok) {
-        throw new Error('Error occurred!')
-    }
-    return await res.json()
+    return getResponseData(res)
 }
 
 /**
@@ -72,10 +78,7 @@ export const setNewCard = async (card) => {
         headers: config.headers,
         body: JSON.stringify(card)
     })
-    if (!res.ok) {
-        throw new Error('Error occurred!')
-    }
-    return await res.json()
+    return getResponseData(res)
 }
 
 /**
@@ -89,10 +92,7 @@ export const setDeliteCard = async (card) => {
         method: 'DELETE',
         headers: config.headers
     })
-    if (!res.ok) {
-        throw new Error('Error occurred!')
-    }
-    return await res.json()
+    return getResponseData(res)
 }
 
 /**
@@ -107,10 +107,7 @@ export const setEditProfile = async (profile) => {
         headers: config.headers,
         body: JSON.stringify(profile)
     })
-    if (!res.ok) {
-        throw new Error('Error occurred!')
-    }
-    return await res.json()
+    return getResponseData(res)
 }
 
 /**
@@ -125,11 +122,7 @@ export const setEditAvatar = async (avatar) => {
         headers: config.headers,
         body: JSON.stringify({ avatar })
     })
-    if (!res.ok) {
-        console.log(res)
-        throw new Error('Error occurred!')
-    }
-    return await res.json()
+    return getResponseData(res)
 }
 
 /**
@@ -144,8 +137,5 @@ export const setLikes = async (method, elemId) => {
         method: method,
         headers: config.headers,
     })
-    if (!res.ok) {
-        throw new Error('Error occurred!')
-    }
-    return await res.json()
+    return getResponseData(res)
 }
