@@ -11,3 +11,4 @@
 *JavaScript*, *HTML*, *CSS*, *node*, *npm*, *webpack*, *БЭМ*, *API*, *семантика и валидность html разметки*
 
 [Ссылка на Githab](https://github.com/tyskanhik/mesto-project-ff)
+[Ссылка на GitHub Pages](https://tyskanhik.github.io/mesto-project-ff/)
