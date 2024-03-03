@@ -70,7 +70,7 @@ const myLiked = (likeId, cardLikeButton, myId) => {
  */
 export function isLiked(evt, elem) {
     let method = ''
-    if (evt.target.classList.contains('card__like-button_is-active')) {
+    if (!evt.target.classList.contains('card__like-button_is-active')) {
         method = 'PUT'
     } else {
         method = 'DELETE'
